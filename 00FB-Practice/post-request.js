@@ -4,7 +4,7 @@ const express = require('express');
 const server = express();
 const PORT = 8888;
 server.listen(PORT);
-let parser = bodyParser.urlencoded({extended: false});
+let parser = express.urlencoded({extended: false});
 server.use(express.static(__dirname));
 
 console.log("Application is running")
