@@ -1,7 +1,7 @@
 "use strict"
 const mongoose = require("mongoose");
 
-const UserSchema = mongoose.Schema({
+const UsersSchema = mongoose.Schema({
     first_name: {type: String, required: true},
     last_name: {type: String, required: true},
     surname: {type: String, required: true},

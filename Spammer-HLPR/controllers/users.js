@@ -1,31 +1,28 @@
 "use strict";
 const Users = require("../models/Users");
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
     try {
-        const allUsers = await Users.find();
-        res.json(allUsers);
+        const allUsers = await Users.find({}, {email: 1, _id: 0});
+        const usersEmails = [];
+        for (let i in allUsers)
+            usersEmails.push(allUsers[i]['email']);
+        res.render('show-users', {users: usersEmails});
     } catch (err) {
         res.json({message: err});
     }
 };
 
 const addUserForMail = async (req, res) => {
-    const newUser = new Users({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        surname: req.body.surname,
-        email: req.body.email
-    });
+    const newUser = new Users(req.body);
     try {
         // if (Users.find({email: req.body.email}) != null)
         //     throw new Error('One of your employees already has this email, which is unique');
         const savedUser = await newUser.save();
-        res.json(savedUser);
+        res.json("User has been added");
     } catch (err) {
-        res.json(err.message);
+        res.json({message: err});
     }
-    console.log(req.body);
 };
 
 const removeUser = async (req, res) => {
