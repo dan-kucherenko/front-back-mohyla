@@ -9,7 +9,7 @@ router.get('/show_users', controller.getUsers);
 router.post('/add_user', controller.addUserForMail);
 
 // DELETE func
-router.delete('/', controller.removeUser);
+router.delete('/delete_user', controller.removeUser);
 
 // UPDATE func
 router.patch('/', controller.updateUserEmail);
