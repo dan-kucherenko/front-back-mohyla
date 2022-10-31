@@ -29,17 +29,50 @@
     <h1><span>Spammer Helper</span></h1>
     <ol class="list-group list-group-numbered">
         <% users.forEach(function (user) { %>
-        <li class="list-group-item"><%= user.email %>
+        <li class="list-group-item" id="list_of_emails"><span><%= user.email %></span>
             <div class="btn-group">
-                <button class="btn" type="submit"> Edit</button>
-                <button class="btn" type="button" name="delete_button" id="<%= user.email %>"
-                        onclick=deleteUser(this.id)>
+                <button class="btn" id="<%= user.email %>" onclick="editEmail(this.id)"> Edit</button>
+                <button class="btn" id="<%= user.email %>" onclick=deleteUser(this.id)>
                     Delete
                 </button>
             </div>
             <% }); %>
         </li>
     </ol>
+    <script>
+        // import keycode from "keycode";
+
+        function editEmail(emailInput) {
+            const button = event.target;
+            const li = document.getElementById('list_of_emails');
+            const span = li.firstElementChild
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = span.textContent;
+            li.insertBefore(input, span);
+            li.removeChild(span);
+            button.textContent = 'Save';
+            if (button.textContent === 'Save') {
+                const input = li.firstElementChild;
+                const span = document.createElement('span');
+                span.textContent = input.value;
+                let object = {
+                    email: input.value
+                }
+                li.insertBefore(span, input);
+                li.removeChild(input);
+                button.textContent = 'Edit';
+            }
+            fetch('http://localhost:4567/spammer/update-email/' + emailInput, {
+                method: 'PATCH',
+                body: JSON.stringify(object),
+                headers: {'Content-type': 'application/json'}
+            }).then(() => {
+                alert("Email has been changed");
+            }).then(() => window.location.reload());
+
+        }
+    </script>
     <script>
         function deleteUser(emailInput) {
             let object = {
@@ -59,16 +92,15 @@
         function getSelectedMessage() {
             const message_selector = document.getElementById('message-selector');
             const selected_message = message_selector.options[message_selector.selectedIndex].text;
-            window.alert(selected_message);
             if (selected_message.message == "Write my own")
-                document.append(<textarea class="form-control" rows='3'/>);
+                document.createElement('TEXTAREA');
         }
     </script>
     <select class="form-select" id="message-selector" onchange="getSelectedMessage()" name="messages">
         <% messages.forEach(function (message) { %>
-            <option value="<%= message._id %>"> <%= message.message %> </option>
+            <option selected id="<%= message._id %>"> <%= message.message %> </option>
         <% }) %>
-        <option selected value="Write my own">Write your own</option>
+        <option value="Write my own">Write your own</option>
     </select>
     <button class="btn btn-primary" onclick="location.href='http://localhost:4567/spammer/send-email'">Send email
     </button>
