@@ -1,21 +1,27 @@
-"use strict";
+// "use strict";
 const Users = require("../models/Users");
 const Messages = require("../models/Messages");
+const mail_sender = require("../mail-sender/send-email");
+
+
+const getMainPage = (req, res) => {
+    console.log("Main page");
+    res.sendFile("D:\\dev\\WebstormProjects\\Front-end Back-end\\Spammer-HLPR\\pages\\add-user.html");
+};
 
 const getUsers = async (req, res) => {
     try {
-        const allUsers = await Users.find({}, {email: 1});
-        const usersEmails = [];
-        for (let i in allUsers)
-            usersEmails.push(allUsers[i]['email']);
-        const allMessages = await Messages.find({}, {message: 1, _id: 0});
-        const messages = [];
-        for (let i in allMessages)
-            messages.push(allMessages[i]['message']);
-        res.render('show-users', {users: usersEmails, messages: messages});
+        const allUsers = await Users.find({}, {_id: 1, email: 1});
+        const allMessages = await Messages.find({}, {_id: 1, message: 1});
+        res.render('show-users', {users: allUsers, messages: allMessages});
     } catch (err) {
         res.json({message: err});
     }
+};
+
+const sendEmail = async (req, res) => {
+    await mail_sender.sendEmail();
+    res.redirect("http://localhost:4567/spammer/show-users");
 };
 
 const addUserForMail = async (req, res) => {
@@ -37,9 +43,9 @@ const addUserForMail = async (req, res) => {
 
 const removeUser = async (req, res) => {
     try {
-        // const removedUser = await Users.findByIdAndDelete({email: req.body.email});
-        // res.json(removedUser);
+        await Users.remove({email: req.body.email});
         console.log("Deleted a user");
+        res.redirect('http://localhost:4567/spammer/show-users');
     } catch (err) {
         res.json({message: err});
     }
@@ -55,4 +61,4 @@ const updateUserEmail = async (req, res) => {
     }
 };
 
-module.exports = {getUsers, addUserForMail, removeUser, updateUserEmail};
+module.exports = {getMainPage, getUsers, sendEmail, addUserForMail, removeUser, updateUserEmail};

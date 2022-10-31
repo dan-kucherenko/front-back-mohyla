@@ -2,16 +2,22 @@
 const router = require('express').Router();
 const controller = require('../controllers/users');
 
+
+// GET func for main page
+router.get('/', controller.getMainPage);
+
 // GET func for all elements
-router.get('/show_users', controller.getUsers);
+router.get('/show-users', controller.getUsers);
+
+router.get('/send-email', controller.sendEmail);
 
 // POST func
-router.post('/add_user', controller.addUserForMail);
+router.post('/add-user', controller.addUserForMail);
 
 // DELETE func
-router.delete('/delete_user', controller.removeUser);
+router.delete('/delete-user', controller.removeUser);
 
 // UPDATE func
-router.patch('/', controller.updateUserEmail);
+router.patch('/:email', controller.updateUserEmail);
 
 module.exports = router;
