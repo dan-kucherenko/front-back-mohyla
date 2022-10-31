@@ -18,6 +18,6 @@ router.post('/add-user', controller.addUserForMail);
 router.delete('/delete-user', controller.removeUser);
 
 // UPDATE func
-router.patch('/:email', controller.updateUserEmail);
+router.patch('/update-email/:email', controller.updateUserEmail);
 
 module.exports = router;
