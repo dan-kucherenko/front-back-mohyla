@@ -4,7 +4,6 @@ const Messages = require("../models/Messages");
 const mail_sender = require("../mail-sender/send-email");
 
 const getMainPage = (req, res) => {
-    console.log("Main page");
     res.sendFile("D:\\dev\\WebstormProjects\\Front-end Back-end\\Spammer-HLPR\\pages\\add-user.html");
 };
 
@@ -32,8 +31,6 @@ const sendEmail = async (req, res) => {
 const addUserForMail = async (req, res) => {
     const newUser = new Users(req.body);
     try {
-        if (Users.find({email: req.body.email}) != null)
-            throw new Error('One of your employees already has this email, which is unique');
         const savedUser = await newUser.save();
         res.redirect("http://localhost:4567/spammer");
     } catch (err) {
