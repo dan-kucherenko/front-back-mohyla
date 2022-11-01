@@ -43,7 +43,6 @@
         function editEmail(emailInput) {
             const button = document.getElementById(emailInput);
             const li = button.parentNode;
-            // alert(button.innerText);
             if (button.innerText == 'Edit') {
                 const span = li.firstElementChild
                 const input = document.createElement('input');
@@ -52,8 +51,7 @@
                 li.insertBefore(input, span);
                 li.removeChild(span);
                 button.innerText = 'Save';
-            }
-            else if (button.innerText == 'Save') {
+            } else if (button.innerText == 'Save') {
                 const input = li.firstElementChild;
                 const span = document.createElement('span');
                 span.textContent = input.value;
@@ -91,21 +89,50 @@
         }
     </script>
     <script>
+
+    </script>
+    <div>
+        <div>
+            <label for="Subject" class="form-label">Subject</label>
+            <input class="form-control" id="subject" required="required">
+        </div>
+        <select class="form-select" id="message-selector">
+            <% messages.forEach(function (message) { %>
+                <option selected id="<%= message._id %>"> <%= message.message %> </option>
+            <% }) %>
+            <option value="Write my own">Write your own</option>
+        </select>
+        <button class="btn btn-primary" type="submit" onclick='sendEmailHTML()'>Send email</button>
+    </div>
+    <script>
         function getSelectedMessage() {
             const message_selector = document.getElementById('message-selector');
-            const selected_message = message_selector.options[message_selector.selectedIndex].text;
-            if (selected_message.message == "Write my own")
-                document.createElement('TEXTAREA');
+            return message_selector.options[message_selector.selectedIndex].innerText;
+        }
+
+        function getSubject() {
+            const subjectInput = document.getElementById('subject');
+            return subjectInput.value;
+        }
+
+        function sendEmailHTML() {
+            const subjectText = getSubject();
+            const selectedMessage = getSelectedMessage();
+            let object = {
+                subject: subjectText,
+                message: selectedMessage
+            }
+            fetch('http://localhost:4567/spammer/send-email', {
+                method: 'POST',
+                body: JSON.stringify(object),
+                headers: {'Content-type': 'application/json'}
+            }).then(() => {
+                alert("Email has been sent");
+            }).then(() =>
+                window.location.reload());
+            // alert('Subject is: ' + object.subject + 'and messageText is: ' + object.message);
         }
     </script>
-    <select class="form-select" id="message-selector" onchange="getSelectedMessage()" name="messages">
-        <% messages.forEach(function (message) { %>
-            <option selected id="<%= message._id %>"> <%= message.message %> </option>
-        <% }) %>
-        <option value="Write my own">Write your own</option>
-    </select>
-    <button class="btn btn-primary" onclick="location.href='http://localhost:4567/spammer/send-email'">Send email
-    </button>
 </div>
 </body>
 </html>

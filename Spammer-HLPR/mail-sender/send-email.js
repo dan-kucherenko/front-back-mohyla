@@ -19,15 +19,11 @@ async function sendEmail(subject, message) {
     let usersEmails = [];
     for (let i in allUsers)
         usersEmails.push(allUsers[i]['email']);
-
-    // const message_selector = document.getElementById('message-selector');
-    // const selected_message = message_selector.options[message_selector.selectedIndex].text;
-    // console.log(selected_message);
     let result = await transporter.sendMail({
         from: USERNAME,
         to: usersEmails,
-        subject: "Miaoo!!",
-        text: "Miaoo!"
+        subject: subject,
+        text: message
     });
     console.log(result);
 }
