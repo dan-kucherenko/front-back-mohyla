@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 const router = require('express').Router();
 const controller = require('../controllers/users');
 
@@ -9,7 +9,8 @@ router.get('/', controller.getMainPage);
 // GET func for all elements
 router.get('/show-users', controller.getUsers);
 
-router.get('/send-email', controller.sendEmail);
+// POST func for sending e-mail
+router.post('/send-email', controller.sendEmail);
 
 // POST func
 router.post('/add-user', controller.addUserForMail);
@@ -18,6 +19,6 @@ router.post('/add-user', controller.addUserForMail);
 router.delete('/delete-user', controller.removeUser);
 
 // UPDATE func
-router.patch('/update-email/:email', controller.updateUserEmail);
+router.patch('/update-email', controller.updateUserEmail);
 
 module.exports = router;

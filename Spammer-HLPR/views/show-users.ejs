@@ -69,7 +69,10 @@
                 }).then(() => {
                     alert("Email has been changed");
                 }).then(() =>
-                    window.location.reload());
+                    window.location.reload())
+                    .catch(err=>{
+                    alert('There is an error');
+                });
             }
         }
     </script>
@@ -85,29 +88,44 @@
             }).then(() => {
                 alert("Email has been deleted");
             }).then(() =>
-                window.location.reload());
+                window.location.reload())
+                .catch(err=>{
+                alert('There is an error')
+            });
         }
     </script>
     <script>
-
+        function checkSelectedMessage() {
+            const message_selector = document.getElementById('message-selector');
+            const input = document.getElementById('inputForOwnMessage');
+            if (message_selector.value == "Write my own")
+                input.style.display = 'block';
+            else
+                input.style.display = 'none';
+        }
     </script>
     <div>
         <div>
             <label for="Subject" class="form-label">Subject</label>
             <input class="form-control" id="subject" required="required">
         </div>
-        <select class="form-select" id="message-selector">
+        <select class="form-select" id="message-selector" onchange="checkSelectedMessage()">
             <% messages.forEach(function (message) { %>
                 <option selected id="<%= message._id %>"> <%= message.message %> </option>
             <% }) %>
-            <option value="Write my own">Write your own</option>
+            <option value="Write my own">Write my own</option>
         </select>
-        <button class="btn btn-primary" type="submit" onclick='sendEmailHTML()'>Send email</button>
+        <input clss="form-control" id="inputForOwnMessage" required="required" style="display:none;">
+        <button class="btn btn-primary" type="button" id="button-sender" onclick='sendEmailHTML()'>Send email</button>
     </div>
     <script>
         function getSelectedMessage() {
             const message_selector = document.getElementById('message-selector');
-            return message_selector.options[message_selector.selectedIndex].innerText;
+            let message = message_selector.options[message_selector.selectedIndex].innerText;
+            const own_input = document.getElementById('inputForOwnMessage');
+            if (message == 'Write my own')
+                message = own_input.value;
+            return message;
         }
 
         function getSubject() {
@@ -129,7 +147,10 @@
             }).then(() => {
                 alert("Email has been sent");
             }).then(() =>
-                window.location.reload());
+                window.location.reload())
+                .catch(err=>{
+                    alert('There is an error')
+                });
             // alert('Subject is: ' + object.subject + 'and messageText is: ' + object.message);
         }
     </script>

@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 const nodemailer = require("nodemailer");
 const Users = require("../models/Users");
 
