@@ -30,19 +30,21 @@
     <ol class="list-group list-group-numbered" id="list_of_emails">
         <% users.forEach(function (user) { %>
         <li class="list-group-item"><span><%= user.email %></span>
-            <button class="btn" id="<%= user.email %>" onclick="editEmail(this.id)">
-                Edit
-            </button>
-            <button class="btn" id="<%= user.email %>" onclick=deleteUser(this.id)>
-                Delete
-            </button>
+            <div class="btn-group-sm">
+                <button class="btn btn-secondary" id="<%= user.email %>" onclick="editEmail(this.id)">
+                    Edit
+                </button>
+                <button class="btn btn-warning" id="<%= user.email %>" onclick=deleteUser(this.id)>
+                    Delete
+                </button>
+            </div>
             <% }); %>
         </li>
     </ol>
     <script>
         function editEmail(emailInput) {
             const button = document.getElementById(emailInput);
-            const li = button.parentNode;
+            const li = button.parentNode.parentNode;
             if (button.innerText == 'Edit') {
                 const span = li.firstElementChild
                 const input = document.createElement('input');
@@ -111,17 +113,15 @@
         }
     </script>
     <div>
-        <div>
-            <label for="Subject" class="form-label">Subject</label>
-            <input class="form-control" id="subject" required="required">
-        </div>
+        <input class="form-control" id="subject" required="required" placeholder="Subject"></label>
         <select class="form-select" id="message-selector" onchange="checkSelectedMessage()">
             <% messages.forEach(function (message) { %>
                 <option selected id="<%= message._id %>"> <%= message.message %> </option>
             <% }) %>
             <option value="Write my own">Write my own</option>
         </select>
-        <input clss="form-control" id="inputForOwnMessage" required="required" style="display:none;">
+        <input class="form-control" id="inputForOwnMessage" required="required" rows="3"
+               placeholder="Type your message here" style="display:none;">
         <button class="btn btn-primary" type="button" id="button-sender" onclick='sendEmailHTML()'>Send email</button>
     </div>
     <script>
