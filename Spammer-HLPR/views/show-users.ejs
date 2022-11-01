@@ -27,50 +27,52 @@
         </li>
     </ul>
     <h1><span>Spammer Helper</span></h1>
-    <ol class="list-group list-group-numbered">
+    <ol class="list-group list-group-numbered" id="list_of_emails">
         <% users.forEach(function (user) { %>
-        <li class="list-group-item" id="list_of_emails"><span><%= user.email %></span>
-            <div class="btn-group">
-                <button class="btn" id="<%= user.email %>" onclick="editEmail(this.id)"> Edit</button>
-                <button class="btn" id="<%= user.email %>" onclick=deleteUser(this.id)>
-                    Delete
-                </button>
-            </div>
+        <li class="list-group-item"><span><%= user.email %></span>
+            <button class="btn" id="<%= user.email %>" onclick="editEmail(this.id)">
+                Edit
+            </button>
+            <button class="btn" id="<%= user.email %>" onclick=deleteUser(this.id)>
+                Delete
+            </button>
             <% }); %>
         </li>
     </ol>
     <script>
-        // import keycode from "keycode";
-
         function editEmail(emailInput) {
-            const button = event.target;
-            const li = document.getElementById('list_of_emails');
-            const span = li.firstElementChild
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = span.textContent;
-            li.insertBefore(input, span);
-            li.removeChild(span);
-            button.textContent = 'Save';
-            if (button.textContent === 'Save') {
+            const button = document.getElementById(emailInput);
+            const li = button.parentNode;
+            // alert(button.innerText);
+            if (button.innerText == 'Edit') {
+                const span = li.firstElementChild
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = span.textContent;
+                li.insertBefore(input, span);
+                li.removeChild(span);
+                button.innerText = 'Save';
+            }
+            else if (button.innerText == 'Save') {
                 const input = li.firstElementChild;
                 const span = document.createElement('span');
                 span.textContent = input.value;
-                let object = {
-                    email: input.value
-                }
                 li.insertBefore(span, input);
                 li.removeChild(input);
-                button.textContent = 'Edit';
+                button.innerText = 'Edit';
+                let object = {
+                    emailToChange: emailInput,
+                    newEmail: span.innerText
+                }
+                fetch('http://localhost:4567/spammer/update-email', {
+                    method: 'PATCH',
+                    body: JSON.stringify(object),
+                    headers: {'Content-type': 'application/json'}
+                }).then(() => {
+                    alert("Email has been changed");
+                }).then(() =>
+                    window.location.reload());
             }
-            fetch('http://localhost:4567/spammer/update-email/' + emailInput, {
-                method: 'PATCH',
-                body: JSON.stringify(object),
-                headers: {'Content-type': 'application/json'}
-            }).then(() => {
-                alert("Email has been changed");
-            }).then(() => window.location.reload());
-
         }
     </script>
     <script>
