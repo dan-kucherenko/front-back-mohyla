@@ -22,7 +22,3 @@ service.use(bodyParser.json());
 // import routes
 const usersRoutes = require('./routes/users');
 service.use('/spammer', usersRoutes);
-
-
-
-

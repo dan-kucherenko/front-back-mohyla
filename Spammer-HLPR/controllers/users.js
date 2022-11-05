@@ -9,7 +9,7 @@ const getMainPage = (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
-        const allUsers = await Users.find({}, {_id: 1, email: 1});
+        const allUsers = await Users.find({}, {_id: 1, email: 1}).sort({email: -1});
         const allMessages = await Messages.find({}, {_id: 1, message: 1});
         res.render('show-users', {users: allUsers, messages: allMessages});
     } catch (err) {
