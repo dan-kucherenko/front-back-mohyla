@@ -11,7 +11,8 @@ const EmployeesSchema = mongoose.Schema({
     country_support: {type: String, required: true},
     contract_type: {type: String, required: true},
     gender: String,
-    hire_date: {type: Date, default: Date.now()}
+    hire_date: {type: Date, default: Date.now()},
+    salary: {type: String}
 });
 
 module.exports = mongoose.model('Employees', EmployeesSchema);
