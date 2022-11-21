@@ -1,4 +1,14 @@
 const Employee = require("../models/Employees");
+const {render} = require("ejs");
+const path = require("path");
+
+// const login = async (req, res) => {
+//     try {
+//         res.sendFile(path.join(__dirname + '/../pages/login.html'));
+//     } catch (err) {
+//         res.json({message: err});
+//     }
+// }
 
 const getEmployees = async (req, res) => {
     try {
@@ -36,20 +46,16 @@ const getEmployeesWithPosition = async (req, res) => {
     }
 }
 
+// const addEmployeeForm = async (req, res) => {
+//     try {
+//         res.sendFile(path.join(__dirname + '/../pages/add-employee.html'));
+//     } catch (err) {
+//         res.json({message: err});
+//     }
+// }
+
 const addEmployee = async (req, res) => {
-    const newEmployee = new Employee({
-        employee_id: req.body.employee_id,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        age: req.body.age,
-        position: req.body.position,
-        department: req.body.department,
-        country_support: req.body.country_support,
-        contract_type: req.body.contract_type,
-        gender: req.body.gender,
-        hire_date: req.body.hire_date
-    });
+    const newEmployee = new Employee(req.body);
     try {
         const savedEmployee = await newEmployee.save();
         res.json(savedEmployee);
@@ -88,10 +94,12 @@ const promoteEmployee = async (req, res) => {
 }
 
 module.exports = {
+    // login,
     getEmployees,
     getEmployee,
     getEmployeesFromDepartment,
     getEmployeesWithPosition,
+    // addEmployeeForm,
     addEmployee,
     removeEmployee,
     updateEmployeeInfo,

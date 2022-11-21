@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const controller = require('../controllers/employees');
 
-router.get('/', controller.login);
+// router.get('/', controller.login);
 
 // GET func for all elements
 router.get('/employees', controller.getEmployees);
@@ -17,7 +17,7 @@ router.get('/employees/:department', controller.getEmployeesFromDepartment);
 router.get('/employees/:position', controller.getEmployeesWithPosition);
 
 // GET func
-router.get('/add-employee', controller.addEmployeeForm);
+// router.get('/add-employee', controller.addEmployeeForm);
 
 // POST func
 router.post('/add-employee', controller.addEmployee);
