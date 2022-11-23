@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
+const cors = require ('cors');
 const service = express();
 const PORT = 4567;
 service.set('view engine', 'ejs');
@@ -14,6 +15,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/company',
     {useNewUrlParser: true},
     () => console.log("Connected to the DB"));
 
+service.use(cors());
 service.use(express.static(__dirname));
 // service.use(express.json());
 // service.use(express.urlencoded({extended: true}));
