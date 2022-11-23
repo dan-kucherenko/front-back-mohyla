@@ -1,7 +1,19 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import $ from 'jquery'
 
 function AddEmployee() {
+    const [emp_id, setEmpID] = useState('');
+    const [first_name, setFirstName] = useState('');
+    const [last_name, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [age, setAge] = useState('');
+    const [position, setPosition] = useState('');
+    const [department, setDepartment] = useState('');
+    const [country_support, setCountrySupp] = useState('');
+    const [contract_type, setContractType] = useState('');
+    const [gender, setGender] = useState('');
+    const [salary, setSalary] = useState('');
+
     const btnClick = () => {
         const form_data = {
             employee_id: $("#employee_id").val(),
@@ -20,8 +32,8 @@ function AddEmployee() {
             method: "POST",
             url: "http://localhost:4567/company/add-employee",
             data: form_data,
-            success: function (msg) {
-                alert(msg);
+            success: function () {
+                alert("Employee has been added");
                 clearInputs();
             },
             error: function () {
@@ -45,75 +57,102 @@ function AddEmployee() {
     }
     return (
         <form method="post" id="add-emp-form" action="">
-            <div class="form-row">
-                <div class="col-md-4 mb-3">
-                    <label for="employee_id">Employee ID</label>
-                    <input type="text" class="form-control" id="employee_id" placeholder="Employee ID"></input>
+            <div className="form-row">
+                <div className="col-md-4 mb-3">
+                    <label htmlFor="employee_id">Employee ID</label>
+                    <input type="text" className="form-control" id="employee_id" placeholder="Employee ID"
+                           onChange={(event) => {
+                               setEmpID(event.target.value);
+                           }}></input>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="first_name">First name</label>
-                    <input type="text" class="form-control" id="first_name" placeholder="First name"></input>
+                <div className="col-md-4 mb-3">
+                    <label htmlFor="first_name">First name</label>
+                    <input type="text" className="form-control" id="first_name" placeholder="First name"
+                           onChange={(event) => {
+                               setFirstName(event.target.value);
+                           }}></input>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="last_name">Last name</label>
-                    <input type="text" class="form-control" id="last_name" placeholder="Last name"></input>
+                <div className="col-md-4 mb-3">
+                    <label htmlFor="last_name">Last name</label>
+                    <input type="text" className="form-control" id="last_name" placeholder="Last name"
+                           onChange={(event) => {
+                               setLastName(event.target.value);
+                           }}></input>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="email">Email</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="email_span">@</span>
+                <div className="col-md-4 mb-3">
+                    <label htmlFor="email">Email</label>
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className="input-group-text" id="email_span">@</span>
                         </div>
-                        <input type="email" class="form-control" id="email" placeholder="Email"
-                               aria-describedby="inputGroupPrepend2"></input>
+                        <input type="email" className="form-control" id="email" placeholder="Email"
+                               aria-describedby="inputGroupPrepend2" onChange={(event) => {
+                            setEmail(event.target.value);
+                        }}></input>
                     </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="col-md-4 mb-3">
-                    <label for="age">Age</label>
-                    <input type="text" class="form-control" id="age" placeholder="Age"></input>
+            <div className="form-row">
+                <div className="col-md-4 mb-3">
+                    <label htmlFor="age">Age</label>
+                    <input type="text" className="form-control" id="age" placeholder="Age" onChange={(event) => {
+                        setFirstName(event.target.value);
+                    }}></input>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="position">Position</label>
-                    <input type="text" class="form-control" id="position" placeholder="Position"></input>
+                <div className="col-md-3 mb-3">
+                    <label htmlFor="position">Position</label>
+                    <input type="text" className="form-control" id="position" placeholder="Position"
+                           onChange={(event) => {
+                               setPosition(event.target.value);
+                           }}></input>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="department">Department</label>
-                    <input type="text" class="form-control" id="department" placeholder="Department"></input>
+                <div className="col-md-3 mb-3">
+                    <label htmlFor="department">Department</label>
+                    <input type="text" className="form-control" id="department" placeholder="Department"
+                           onChange={(event) => {
+                               setDepartment(event.target.value);
+                           }}></input>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="country_support">Country Support</label>
-                    <input type="text" class="form-control" id="country_support"
-                           placeholder="Country Support"></input>
+                <div className="col-md-3 mb-3">
+                    <label htmlFor="country_support">Country Support</label>
+                    <input type="text" className="form-control" id="country_support"
+                           placeholder="Country Support" onChange={(event) => {
+                        setCountrySupp(event.target.value);
+                    }}></input>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="contract_type">Contract Type</label>
-                    <input type="text" class="form-control" id="contract_type" placeholder="Contract Type"></input>
+                <div className="col-md-3 mb-3">
+                    <label htmlFor="contract_type">Contract Type</label>
+                    <input type="text" className="form-control" id="contract_type" placeholder="Contract Type"
+                           onChange={(event) => {
+                               setContractType(event.target.value);
+                           }}></input>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="gender">Gender</label>
-                    <select class="form-select" id="gender">
+                <div className="col-md-3 mb-3">
+                    <label htmlFor="gender">Gender</label>
+                    <select className="form-select" id="gender" onChange={(event) => {
+                        setGender(event.target.value);
+                    }}>
                         <option selected>Male</option>
                         <option>Female</option>
                     </select>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <label for="salary">Salary</label>
-                    <input type="text" class="form-control" id="salary" placeholder="Salary"></input>
+                <div className="col-md-3 mb-3">
+                    <label htmlFor="salary">Salary</label>
+                    <input type="text" className="form-control" id="salary" placeholder="Salary" onChange={(event) => {
+                        setSalary(event.target.value);
+                    }}></input>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required></input>
-                    <label class="form-check-label" for="invalidCheck2">
+            <div className="form-group">
+                <div className="form-check">
+                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required></input>
+                    <label className="form-check-label" htmlFor="invalidCheck2">
                         Agree to terms and conditions
                     </label>
                 </div>
             </div>
-            <button class="btn btn-primary" type="button" onClick={btnClick} id="add-empl">Submit form</button>
+            <button className="btn btn-primary" type="button" onClick={btnClick} id="add-empl">Submit form</button>
         </form>
-
     );
 }
 
