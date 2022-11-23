@@ -17,8 +17,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/company',
 
 service.use(cors());
 service.use(express.static(__dirname));
-// service.use(express.json());
-// service.use(express.urlencoded({extended: true}));
 service.use(bodyParser.json());
 service.use(bodyParser.urlencoded({extended: true}));
 
