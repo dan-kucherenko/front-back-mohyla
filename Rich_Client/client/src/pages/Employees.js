@@ -7,9 +7,19 @@ function Employees() {
     }, []);
     const [employees, setEmployees] = useState([]);
 
-    const fetchItems = async () => {
-        const employees = await (await fetch('/company/employees')).json();
-        setEmployees(employees);
+    const fetchItems = () => {
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:4567/company/employees",
+            data: 'json',
+            success: function (data) {
+                setEmployees(data);
+            },
+            error: function () {
+                alert("Failure");
+            }
+        });
+//TODO: edit, delete buttons. implement search by id, position, department
     };
     // const editEmail = (emailInput) => {
     //     const button = document.getElementById(emailInput);
@@ -70,7 +80,11 @@ function Employees() {
     //         window.location.reload());
     // };
     return (
-        <div className="container">
+        <div>
+            <div className="form-outline mb-4">
+                <input type="search" className="form-control" id="datatable-search-input"/>
+                <label className="form-label" htmlFor="datatable-search-input">Search</label>
+            </div>
             <div className="table-responsive">
                 <table className="table">
                     <thead className="table-dark">
@@ -105,8 +119,10 @@ function Employees() {
                                 <td>{employee.department}</td>
                                 <td>{employee.salary}</td>
                                 <td>
-                                    <button type="button" className="btn btn-success">Edit</button>
-                                    <button type="button" className="btn btn-danger">Delete</button>
+                                    <div className="btn-group-vertical">
+                                        <button type="button" className="btn btn-warning">Edit</button>
+                                        <button type="button" className="btn btn-danger">Delete</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))
