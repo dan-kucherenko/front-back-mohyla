@@ -1,7 +1,16 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import $ from 'jquery';
 
 function Employees() {
+    useEffect(() => {
+        fetchItems();
+    }, []);
+    const [employees, setEmployees] = useState([]);
+
+    const fetchItems = async () => {
+        const employees = await (await fetch('/company/employees')).json();
+        setEmployees(employees);
+    };
     // const editEmail = (emailInput) => {
     //     const button = document.getElementById(emailInput);
     //     const li = button.parentNode.parentNode;
@@ -62,23 +71,6 @@ function Employees() {
     // };
     return (
         <div className="container">
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <a className="navbar-brand" href="http://localhost:4567/company">Employees Handbook</a>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                        <li className="nav-item active">
-                            <a className="nav-link" href="http://localhost:4567/company/employees"> Employees</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="http://localhost:4567/company/add-employee">Add employee</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
             <div className="table-responsive">
                 <table className="table">
                     <thead className="table-dark">
@@ -94,10 +86,31 @@ function Employees() {
                         <th scope="col">Position</th>
                         <th scope="col">Department</th>
                         <th scope="col">Salary</th>
+                        <th scope="col">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-
+                    {
+                        employees.map(employee => (
+                            <tr>
+                                <th scope="row">{employee.employee_id}</th>
+                                <td>{employee.first_name}</td>
+                                <td>{employee.last_name}</td>
+                                <td>{employee.email}</td>
+                                <td>{employee.age}</td>
+                                <td>{employee.country_support}</td>
+                                <td>{employee.contract_type}</td>
+                                <td>{employee.gender}</td>
+                                <td>{employee.position}</td>
+                                <td>{employee.department}</td>
+                                <td>{employee.salary}</td>
+                                <td>
+                                    <button type="button" className="btn btn-success">Edit</button>
+                                    <button type="button" className="btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        ))
+                    }
                     </tbody>
                 </table>
             </div>

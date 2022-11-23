@@ -11,34 +11,10 @@ function App() {
                 <header className="App-header">
                     <NavBar/>
                     <Routes>
-                        <Route to="/company" exact component={Login}/>
-                        <Route to="/employees" exact component={Employees}/>
-                        <Route to="/add-employee" exact component={AddEmployee}/>
+                        <Route path="/company" element={<Login/>}/>
+                        <Route path="/employees" element={<Employees/>}/>
+                        <Route path="/add-employee" element={<AddEmployee/>}/>
                     </Routes>
-                    <div className="container">
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead className="table-dark">
-                                <tr>
-                                    <th scope="col">Emp_ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Surname</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Country Support</th>
-                                    <th scope="col">Contract Type</th>
-                                    <th scope="col">Gender</th>
-                                    <th scope="col">Position</th>
-                                    <th scope="col">Department</th>
-                                    <th scope="col">Salary</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </header>
             </div>
         </BrowserRouter>
