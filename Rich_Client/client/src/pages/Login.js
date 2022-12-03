@@ -19,31 +19,33 @@ function Login() {
 
     const login = (props) => {
         if (username === 'root' && password === 'root' && adminChecked)
-            navigate('/employees');
+            navigate('/company/employees');
         else
             alert("Wrong username or password");
     };
 
     return (
         <div className="col-md-6">
-            <form>
-                <div className="form-group">
-                    <label className="form-label" htmlFor="username">Username</label>
-                    <input id="username" className="form-control form-control-md" onChange={handleChangeUsername}
-                           placeholder="Enter a valid username"/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input type="password" className="form-control" id="password" onChange={handleChangePassword}
-                           placeholder="Password"/>
-                </div>
-                <div className="form-check">
-                    <input type="checkbox" className="form-check-input" onChange={handleChangeAdmin} id="admin"/>
-                    <label className="form-check-label" htmlFor="admin">I am
-                        administrator</label>
-                </div>
-                <button type="button" className="btn btn-primary" onClick={login}>Login</button>
-            </form>
+            <div className="container" id="login-cont">
+                <form>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="username">Username</label>
+                        <input id="username" className="form-control form-control-md" onChange={handleChangeUsername}
+                               placeholder="Enter a valid username"/>
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="password">Password</label>
+                        <input type="password" className="form-control" id="password" onChange={handleChangePassword}
+                               placeholder="Password"/>
+                    </div>
+                    <div className="form-check">
+                        <input type="checkbox" className="form-check-input" onChange={handleChangeAdmin} id="admin"/>
+                        <label className="form-check-label" htmlFor="admin">I am
+                            administrator</label>
+                    </div>
+                    <button type="button" className="btn btn-primary" onClick={login}>Login</button>
+                </form>
+            </div>
         </div>
     );
 }

@@ -56,104 +56,88 @@ function AddEmployee() {
         }
     }
     return (
-        <form method="post" id="add-emp-form" action="">
-            <div className="form-row">
-                <div className="col-md-4 mb-3">
+        <div className="container" id="#add-employee-cont">
+            <link rel="stylesheet" href="../styles/add-employee.css"/>
+            <form method="post" id="add-emp-form" action="">
+                <div className="form-row">
                     <label htmlFor="employee_id">Employee ID</label>
                     <input type="text" className="form-control" id="employee_id" placeholder="Employee ID"
                            onChange={(event) => {
                                setEmpID(event.target.value);
                            }}></input>
                 </div>
-                <div className="col-md-4 mb-3">
-                    <label htmlFor="first_name">First name</label>
-                    <input type="text" className="form-control" id="first_name" placeholder="First name"
-                           onChange={(event) => {
-                               setFirstName(event.target.value);
-                           }}></input>
-                </div>
-                <div className="col-md-4 mb-3">
-                    <label htmlFor="last_name">Last name</label>
-                    <input type="text" className="form-control" id="last_name" placeholder="Last name"
-                           onChange={(event) => {
-                               setLastName(event.target.value);
-                           }}></input>
-                </div>
-                <div className="col-md-4 mb-3">
-                    <label htmlFor="email">Email</label>
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text" id="email_span">@</span>
-                        </div>
-                        <input type="email" className="form-control" id="email" placeholder="Email"
-                               aria-describedby="inputGroupPrepend2" onChange={(event) => {
-                            setEmail(event.target.value);
-                        }}></input>
+                <label htmlFor="first_name">First name</label>
+                <input type="text" className="form-control" id="first_name" placeholder="First name"
+                       onChange={(event) => {
+                           setFirstName(event.target.value);
+                       }}></input>
+                <label htmlFor="last_name">Last name</label>
+                <input type="text" className="form-control" id="last_name" placeholder="Last name"
+                       onChange={(event) => {
+                           setLastName(event.target.value);
+                       }}></input>
+                <label htmlFor="email">Email</label>
+                <div className="input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text" id="email_span">@</span>
                     </div>
+                    <input type="email" className="form-control" id="email" placeholder="Email"
+                           aria-describedby="inputGroupPrepend2" onChange={(event) => {
+                        setEmail(event.target.value);
+                    }}></input>
                 </div>
-            </div>
-            <div className="form-row">
-                <div className="col-md-4 mb-3">
+                <div className="form-row">
                     <label htmlFor="age">Age</label>
                     <input type="text" className="form-control" id="age" placeholder="Age" onChange={(event) => {
                         setFirstName(event.target.value);
                     }}></input>
                 </div>
-                <div className="col-md-3 mb-3">
-                    <label htmlFor="position">Position</label>
-                    <input type="text" className="form-control" id="position" placeholder="Position"
-                           onChange={(event) => {
-                               setPosition(event.target.value);
-                           }}></input>
+                <label htmlFor="position">Position</label>
+                <input type="text" className="form-control" id="position" placeholder="Position"
+                       onChange={(event) => {
+                           setPosition(event.target.value);
+                       }}></input>
+                <label htmlFor="department">Department</label>
+                <input type="text" className="form-control" id="department" placeholder="Department"
+                       onChange={(event) => {
+                           setDepartment(event.target.value);
+                       }}></input>
+                <label htmlFor="country_support">Country Support</label>
+                <input type="text" className="form-control" id="country_support"
+                       placeholder="Country Support" onChange={(event) => {
+                    setCountrySupp(event.target.value);
+                }}></input>
+                <label htmlFor="contract_type">Contract Type</label>
+                <input type="text" className="form-control" id="contract_type" placeholder="Contract Type"
+                       onChange={(event) => {
+                           setContractType(event.target.value);
+                       }}></input>
+                <label htmlFor="gender">Gender</label>
+                <select className="form-select" id="gender" onChange={(event) => {
+                    setGender(event.target.value);
+                }}>
+                    <option selected>Male</option>
+                    <option>Female</option>
+                </select>
+                <label htmlFor="salary">Salary</label>
+                <input type="text" className="form-control" id="salary" placeholder="Salary"
+                       onChange={(event) => {
+                           setSalary(event.target.value);
+                       }}></input>
+                <div className="form-group">
+                    <div className="form-check">
+                        <input className="form-check-input" type="checkbox" value="" id="invalidCheck2"
+                               required></input>
+                        <label className="form-check-label" htmlFor="invalidCheck2">
+                            Agree to terms and conditions
+                        </label>
+                    </div>
                 </div>
-                <div className="col-md-3 mb-3">
-                    <label htmlFor="department">Department</label>
-                    <input type="text" className="form-control" id="department" placeholder="Department"
-                           onChange={(event) => {
-                               setDepartment(event.target.value);
-                           }}></input>
-                </div>
-                <div className="col-md-3 mb-3">
-                    <label htmlFor="country_support">Country Support</label>
-                    <input type="text" className="form-control" id="country_support"
-                           placeholder="Country Support" onChange={(event) => {
-                        setCountrySupp(event.target.value);
-                    }}></input>
-                </div>
-                <div className="col-md-3 mb-3">
-                    <label htmlFor="contract_type">Contract Type</label>
-                    <input type="text" className="form-control" id="contract_type" placeholder="Contract Type"
-                           onChange={(event) => {
-                               setContractType(event.target.value);
-                           }}></input>
-                </div>
-                <div className="col-md-3 mb-3">
-                    <label htmlFor="gender">Gender</label>
-                    <select className="form-select" id="gender" onChange={(event) => {
-                        setGender(event.target.value);
-                    }}>
-                        <option selected>Male</option>
-                        <option>Female</option>
-                    </select>
-                </div>
-                <div className="col-md-3 mb-3">
-                    <label htmlFor="salary">Salary</label>
-                    <input type="text" className="form-control" id="salary" placeholder="Salary" onChange={(event) => {
-                        setSalary(event.target.value);
-                    }}></input>
-                </div>
-            </div>
-            <div className="form-group">
-                <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required></input>
-                    <label className="form-check-label" htmlFor="invalidCheck2">
-                        Agree to terms and conditions
-                    </label>
-                </div>
-            </div>
-            <button className="btn btn-primary" type="button" onClick={btnClick} id="add-empl">Submit form</button>
-        </form>
-    );
+                <button className="btn btn-primary" type="button" onClick={btnClick} id="add-empl">Submit form</button>
+            </form>
+        </div>
+    )
+        ;
 }
 
 export default AddEmployee;

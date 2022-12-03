@@ -11,11 +11,11 @@ function NavBar() {
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">
-                    <li className="nav-item active">
-                        <Link className="nav-link" to="/employees"> Employees</Link>
+                    <li className="nav-item ">
+                        <Link className="nav-link" to="/company/employees"> Employees</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/add-employee"> Add Employee</Link>
+                        <Link className="nav-link" to="/company/add-employee"> Add Employee</Link>
                     </li>
                 </ul>
             </div>
