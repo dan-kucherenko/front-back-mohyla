@@ -14,13 +14,13 @@ server.get('/', function(req, res){
 
 server.post('/:elem', function(req, res){
     // we should use req.body 
-    arr.push(req.params.elem);
+    arr.push(req.params.elem); // need to use req.body
     res.writeHead(200,{"Content-type": "text/html"});
     res.end();
 });
 
-server.delete('/', function(req, res){
-    arr.pop();
+server.delete('/:elem', function(req, res){
+    arr.pop(); // need to use delete for particular element
     res.writeHead(200,{"Content-type": "text/html"});
     res.end();
 });

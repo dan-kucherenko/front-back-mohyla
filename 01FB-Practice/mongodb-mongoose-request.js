@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const scheme = new Schema({author: String, title: String}, {versionKey: false});
-mongoose.connect("mongodb://localhost:27017/bookmart", {
+mongoose.connect("mongodb://localhost:27017/test", {
     useUnifiedTopology: true, useNewUrlParser: true
 });
 const MongModel = mongoose.model("users", scheme);
@@ -12,7 +12,7 @@ let res = readAll();
 res.then(r => console.log(r));
 
 async function readAll() {
-    let promis = new Promise((resolve, reject) => {
+    let promise = new Promise((resolve, reject) => {
         let res = MongModel.find({}, function (err, docs) {
             mongoose.disconnect();
             if (err)
@@ -21,7 +21,7 @@ async function readAll() {
                 resolve(docs);
         });
     });
-    return promis;
+    return promise;
 }
 
 function create(obj) {

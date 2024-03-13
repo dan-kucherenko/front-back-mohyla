@@ -1,4 +1,4 @@
 "use strict";
-let x = 32564654654654611;
+let x = Number.MAX_VALUE;
 console.log((x++) < x);
 

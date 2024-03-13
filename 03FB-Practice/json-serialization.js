@@ -10,6 +10,7 @@ let characters_arr = [{
         age: 21,
         birth_place: "Kharkiv"
     }];
+
 const characters_data = JSON.stringify(characters_arr);
 fs.writeFileSync('characters.json', characters_data);
 let characters_file_in = fs.readFileSync('characters.json');
