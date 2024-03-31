@@ -1,85 +1,96 @@
 const Employee = require("../models/Employees");
 
-const getEmployees = async (req, res) => {
+const getAllEmployees = async (req, res) => {
     try {
-        const allEmployees = await Employee.find();
-        res.json(allEmployees);
-    } catch (err) {
-        res.json({message: err});
-    }
-}
+        let filter = {};
 
-const getEmployee = async (req, res) => {
-    try {
-        const employee = await Employee.find({employee_id: req.params.employee_id});
-        res.json(employee);
-    } catch (err) {
-        res.json({message: err});
-    }
-}
+        if (req.query.department) {
+            filter.department = req.query.department;
+        }
+        if (req.query.position) {
+            filter.position = req.query.position;
+        }
 
-const getEmployeesFromDepartment = async (req, res) => {
-    try {
-        const employees = await Employee.find({department: req.params.department});
+        if (req.query.employee_id) {
+            const employee = await Employee.findOne({ employee_id: req.query.employee_id });
+            if (!employee) {
+                return res.status(404).json({ message: "Employee not found." });
+            }
+            return res.json(employee);
+        }
+
+        const employees = await Employee.find(filter);
+        if (!employees.length) {
+            return res.status(404).json({ message: "No employees found matching the criteria." });
+        }
+
         res.json(employees);
     } catch (err) {
-        res.json({message: err});
+        res.status(500).json({
+            message: "An error occurred while retrieving employees.",
+            error: err.message
+        });
     }
-}
-
-const getEmployeesWithPosition = async (req, res) => {
-    try {
-        const employees = await Employee.find({position: req.params.position});
-        res.json(employees);
-    } catch (err) {
-        res.json({message: err});
-    }
-}
+};
 
 const addEmployee = async (req, res) => {
     const newEmployee = new Employee(req.body);
     try {
         const savedEmployee = await newEmployee.save();
-        res.json(savedEmployee);
+        res.status(201).json(savedEmployee);
     } catch (err) {
-        res.json({message: err});
+        res.status(400).json({message: "An error occurred while adding the employee.", error: err.message});
     }
-}
+};
 
 const removeEmployee = async (req, res) => {
     try {
-        const firedEmployee = await Employee.remove({employee_id: req.params.employee_id});
-        res.json(firedEmployee);
+        const employee = await Employee.findOne({ employee_id: req.query.employee_id });
+
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        await Employee.deleteOne({ employee_id: req.query.employee_id });
+
+        res.json({ message: "Employee removed successfully", employee: employee });
     } catch (err) {
-        res.json({message: err});
+        res.status(500).json({ message: "An error occurred while removing the employee.", error: err.message });
     }
-}
+};
 
 const updateEmployeeInfo = async (req, res) => {
     try {
-        const updatedEmployeeInfo = await Employee.updateOne({_id: req.params.id},
-            {$set: {first_name: req.body.first_name}});
+        const updatedEmployeeInfo = await Employee.findOneAndUpdate(
+            { employee_id: req.query.employee_id }, // Query by custom employee_id
+            { $set: req.body }, // Update operation
+            { new: true, runValidators: true } // Options: return the updated document and run schema validators
+        );
+
+        if (!updatedEmployeeInfo) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
         res.json(updatedEmployeeInfo);
     } catch (err) {
-        res.json({message: err});
+        res.status(500).json({ message: "An error occurred while updating the employee info.", error: err.message });
     }
-}
+};
 
 const promoteEmployee = async (req, res) => {
     try {
-        const updatedEmployeeInfo = await Employee.updateOne({employee_id: req.params.employee_id},
-            {$set: {position: req.body.position}});
-        res.json(updatedEmployeeInfo);
+        const updatedEmployee = await Employee.findOneAndUpdate({employee_id: req.params.employee_id}, {$set: {position: req.body.position}}, {new: true});
+        if (!updatedEmployee) {
+            return res.status(404).json({message: "Employee not found"});
+        }
+        res.json(updatedEmployee);
     } catch (err) {
-        res.json({message: err});
+        res.status(400).json({message: "An error occurred while promoting the employee.", error: err.message});
     }
-}
+};
 
 module.exports = {
-    getEmployees,
-    getEmployee,
-    getEmployeesFromDepartment,
-    getEmployeesWithPosition,
+    getAllEmployees,
     addEmployee,
     removeEmployee,
     updateEmployeeInfo,

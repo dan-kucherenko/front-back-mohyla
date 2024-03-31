@@ -1,26 +1,17 @@
-"use strict"
+"use strict";
 const router = require('express').Router();
 const controller = require('../controllers/employees');
 
-// GET func for all elements
-router.get('/employees', controller.getEmployees);
+// GET all employees/ by id / by department / by position
+router.get('/employees', controller.getAllEmployees);
 
-// GET func for exact department
-router.get('/employees/departments/:department', controller.getEmployeesFromDepartment);
+// POST to add a new employee
+router.post('/employees', controller.addEmployee);
 
-// GET func for exact position employees
-router.get('/employees/positions/:position', controller.getEmployeesWithPosition);
+// DELETE an employee
+router.delete('/employees', controller.removeEmployee);
 
-// GET func for exact employee_id
-router.get('/employees/:employee_id', controller.getEmployee);
-
-// POST func
-router.post('/add-employee', controller.addEmployee);
-
-// DELETE func
-router.delete('/remove/:employee_id', controller.removeEmployee);
-
-// UPDATE func
-router.patch('/promote/:employee_id', controller.updateEmployeeInfo);
+// PATCH to update an employee's info
+router.patch('/employees', controller.updateEmployeeInfo);
 
 module.exports = router;

@@ -9,119 +9,53 @@ function Employees() {
     const [btn_text, setBtnText] = useState('Edit');
 
     useEffect(() => {
-        fetchItems();
+        fetchEmployees();
     }, []);
 
-    const fetchItems = () => {
+    const fetchEmployees = (queryString = '') => {
         $.ajax({
             method: "GET",
-            url: "http://localhost:4567/company/employees",
-            data: 'json',
+            url: `http://localhost:4567/company/employees${queryString ? '?' + queryString : ''}`,
+            dataType: 'json',
             success: function (data) {
-                setEmployees(data);
+                setEmployees(Array.isArray(data) ? data : [data]);
             },
             error: function () {
-                alert("Failure");
+                alert("An error occurred during the fetch operation.");
             }
         });
     };
 
-    const handleChangeSearchEmpID = (event) => {
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:4567/company/employees/" + event.target.value,
-            data: 'json',
-            success: function (data) {
-                setEmployees(data);
-            },
-            error: function () {
-                alert("Failure searching by employee id");
-            }
-        });
-    };
-    const handleChangeSearchDepartment = (event) => {
-        if (event.target.value === "")
-            fetchItems();
-        else {
-            $.ajax({
-                    method: "GET",
-                    url: "http://localhost:4567/company/employees/departments/" + event.target.value,
-                    data: 'json',
-                    success: function (data) {
-                        setEmployees(data);
-                    },
-                    error: function () {
-                        alert("Failure searching by department");
-                    }
-                }
-            );
-        }
-    };
-    const handleChangeSearchPosition = (event) => {
-        if (event.target.value === "")
-            fetchItems();
-        else {
-            $.ajax({
-                method: "GET",
-                url: "http://localhost:4567/company/employees/positions/" + event.target.value,
-                data: 'json',
-                success: function (data) {
-                    setEmployees(data);
-                },
-                error: function () {
-                    alert("Failure searching by position");
-                }
-            });
-        }
-    };
-    const editPosition = (employee_id, e) => {
-        const button = $(".button #employee_id");
-        const td = $(".td #employee_id");
-        if (btn_text === 'Edit') {
-            const span = $(".span #emp-pos");
-            // const input = $('<input  id="position-input" type="text"/>');
-            // td.append(input, span);
-            // td.remove(span);
-            setBtnText("Save");
-            alert("Edit");
-        } else if (btn_text === 'Save') {
-            alert("Save");
+    const handleSearch = () => {
+        // Construct the query object based on search parameters
+        let query = {};
 
-            // const input = $("#position-input");
-            // const span = $('<span>input.value</span>');
-            // td.prepend(span, input);
-            // td.remove(input);
-            setBtnText("Edit");
-            // let object = {
-            //     employee_id: employee_id,
-            //     newPosition: span.innerText
-            // }
-            //     $.ajax('http://localhost:4567/spammer/update-email', {
-            //         method: 'PATCH',
-            //         body: JSON.stringify(object),
-            //         headers: {'Content-type': 'application/json'}
-            //     }).then((res) => {
-            //         if (!res.ok) {
-            //             alert("There is an error");
-            //             return res;
-            //         }
-            //     }).then((res) => {
-            //         alert("Email has been changed");
-            //         res.json();
-            //     }).then(() =>
-            //         window.location.reload());
+        if (emp_id) query.employee_id = emp_id;
+        if (department) query.department = department;
+        if (position) query.position = position;
+
+        if (!emp_id && !department && !position) {
+            fetchEmployees();
+        } else {
+            // Construct the query string from the query object for non-empty search parameters
+            const queryString = Object.keys(query)
+                .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+                .join('&');
+
+            fetchEmployees(queryString);
         }
     };
 
     const deleteEmployee = (empID) => {
         $.ajax({
-            url: 'http://localhost:4567/company/remove/' + empID,
+            url: 'http://localhost:4567/company/employees?employee_id=' + empID,
             method: 'DELETE',
             success: function () {
-                alert("Email has been deleted");
-                fetchItems();
+                alert("Employee has been deleted");
+                fetchEmployees();
             },
             error: function () {
+                console.log(empID)
                 alert("There has been an error");
             }
         });
@@ -131,14 +65,17 @@ function Employees() {
             <link rel="stylesheet" href="../styles/employees.css"/>
                 <div className="form-outline mb-2">
                     <input type="search" className="form-control" id="db-emp_id-search"
-                           onChange={handleChangeSearchEmpID}/>
+                           onChange={(event) => setEmpID(event.target.value)}
+                           onBlur={handleSearch}/>
                     <label className="form-label" htmlFor="db-emp_id-search">EmployeeID Search</label>
                     <input type="search" className="form-control" id="db-department-search"
-                           onChange={handleChangeSearchDepartment}/>
+                           onChange={(event) => setDepartment(event.target.value)}
+                           onBlur={handleSearch}/>
                     <label className="form-label" htmlFor="db-department-search">Department
                         Search</label>
                     <input type="search" className="form-control" id="db-position-search"
-                           onChange={handleChangeSearchPosition}/>
+                           onChange={(event) => setPosition(event.target.value)}
+                           onBlur={handleSearch}/>
                     <label className="form-label" htmlFor="db-position-search">Position
                         Search</label>
                 </div>
@@ -178,7 +115,8 @@ function Employees() {
                                     <td>
                                         <div className="btn-group-vertical">
                                             <button type="button" className="btn btn-warning"
-                                                    onClick={() => editPosition(employee.employee_id)}>{btn_text}
+                                                    // onClick={() => editPosition(employee.employee_id)}
+                                            >{btn_text}
                                             </button>
                                             <button type="button" className="btn btn-danger"
                                                     onClick={() => deleteEmployee(employee.employee_id)}>Delete

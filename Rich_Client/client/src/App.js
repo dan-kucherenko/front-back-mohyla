@@ -12,8 +12,8 @@ function App() {
                     <NavBar/>
                     <Routes>
                         <Route path="/company" element={<Login/>}/>
-                        <Route path="/employees" element={<Employees/>}/>
-                        <Route path="/add-employee" element={<AddEmployee/>}/>
+                        <Route path="/company/employees" element={<Employees/>}/>
+                        <Route path="/company/add-employee" element={<AddEmployee/>}/>
                     </Routes>
                 </header>
             </div>

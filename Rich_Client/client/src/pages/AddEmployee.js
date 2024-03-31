@@ -30,7 +30,7 @@ function AddEmployee() {
         };
         $.ajax({
             method: "POST",
-            url: "http://localhost:4567/company/add-employee",
+            url: "http://localhost:4567/company/employees",
             data: form_data,
             success: function () {
                 alert("Employee has been added");
