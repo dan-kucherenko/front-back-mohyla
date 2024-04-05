@@ -10,6 +10,10 @@ function Employees() {
 
     useEffect(() => {
         fetchEmployees();
+        const intervalId = setInterval(() => {
+            fetchEmployees();
+        }, 5000);
+        return () => clearInterval(intervalId);
     }, []);
 
     const fetchEmployees = (queryString = '') => {
