@@ -1,0 +1,21 @@
+{
+  "name": "richclientgraphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dan-kucherenko/front-back-mohyla.git"
+  },
+  "private": true,
+  "dependencies": {
+    "apollo-server": "^3.13.0",
+    "apollo-server-express": "^3.13.0",
+    "express": "^4.19.2",
+    "graphql": "^16.8.1",
+    "mongoose": "^8.3.0"
+  }
+}
