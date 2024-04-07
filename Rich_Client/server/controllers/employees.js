@@ -45,13 +45,11 @@ const addEmployee = async (req, res) => {
 
 const removeEmployee = async (req, res) => {
     try {
-        const employee = await Employee.findOne({ employee_id: req.query.employee_id });
+        const employee = await Employee.findOneAndDelete({ employee_id: req.query.employee_id });
 
         if (!employee) {
             return res.status(404).json({ message: "Employee not found" });
         }
-
-        await Employee.deleteOne({ employee_id: req.query.employee_id });
 
         res.json({ message: "Employee removed successfully", employee: employee });
     } catch (err) {
@@ -59,12 +57,13 @@ const removeEmployee = async (req, res) => {
     }
 };
 
+
 const updateEmployeeInfo = async (req, res) => {
     try {
         const updatedEmployeeInfo = await Employee.findOneAndUpdate(
-            { employee_id: req.query.employee_id }, // Query by custom employee_id
-            { $set: req.body }, // Update operation
-            { new: true, runValidators: true } // Options: return the updated document and run schema validators
+            { employee_id: req.query.employee_id },
+            { $set: req.body },
+            { new: false, runValidators: true }
         );
 
         if (!updatedEmployeeInfo) {
@@ -79,7 +78,7 @@ const updateEmployeeInfo = async (req, res) => {
 
 const promoteEmployee = async (req, res) => {
     try {
-        const updatedEmployee = await Employee.findOneAndUpdate({employee_id: req.params.employee_id}, {$set: {position: req.body.position}}, {new: true});
+        const updatedEmployee = await Employee.findOneAndUpdate({employee_id: req.params.employee_id}, {$set: {position: req.body.position}}, {new: false});
         if (!updatedEmployee) {
             return res.status(404).json({message: "Employee not found"});
         }
