@@ -2,7 +2,7 @@
 
 * {
     box-sizing: border-box;
-    font-family: "Poppins";
+    font-family: "Times New Roman";
 }
 
 .list-group-item {
@@ -27,17 +27,16 @@
 }
 
 .btn-primary {
-    background-color: DodgerBlue;
+    background-color: royalblue;
     font-weight: 600;
     font-size: 18px;
     margin: 0px auto;
-    width: 70%;
+    width: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 60px;
     border-radius: 20px;
-    box-shadow: 0 3px 0 rgba(71, 71, 99, 0.92)
 }
 
 
