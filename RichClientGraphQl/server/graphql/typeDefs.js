@@ -46,8 +46,9 @@ const typeDefs = gql`
   }
   
   type Query {
-    employees: [Employee]
-    employee(employee_id: Int!): Employee
+    employees(department: String, position: String, employee_id: ID): [Employee]
+#    employees: [Employee]
+#    employee(employee_id: Int!): Employee
   }
 
   type Mutation {

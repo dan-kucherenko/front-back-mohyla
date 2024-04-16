@@ -2,11 +2,25 @@ const Employee = require('../models/Employees');
 
 const resolvers = {
     Query: {
-        employees: async () => {
-            return Employee.find();
-        },
-        employee: async (_, {employee_id}) => {
-            return Employee.findOne({employee_id: employee_id});
+        employees: async (_, args) => {
+            let filter = {};
+
+            if (args.department) {
+                filter.department = args.department;
+            }
+
+            if (args.position) {
+                filter.position = args.position;
+            }
+
+            if (args.employee_id) {
+                const employee = await Employee.findOne({ employee_id: args.employee_id });
+                if (!employee) {
+                    throw new Error("Employee not found.");
+                }
+                return [employee]; // Return as an array for consistency
+            }
+            return await Employee.find(filter);
         },
     },
     Mutation: {
@@ -20,10 +34,6 @@ const resolvers = {
 
         async deleteEmployee(_, {employee_id}) {
             return Employee.findOneAndDelete({employee_id: employee_id});
-        },
-
-        async promoteEmployee(_, {employeeId, position}) {
-            return Employee.findOneAndUpdate({employee_id: employeeId}, {$set: {position}}, {new: false});
         },
     },
 };
