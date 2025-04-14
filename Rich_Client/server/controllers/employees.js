@@ -123,10 +123,58 @@ const promoteEmployee = async (req, res) => {
   }
 };
 
+const updateEmployee = async (req, res) => {
+  try {
+    const { employee_id } = req.query;
+    const updates = req.body;
+
+    const employee = await Employee.findOneAndUpdate(
+      { employee_id: parseInt(employee_id) },
+      updates,
+      { new: true }
+    );
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.json(employee);
+  } catch (err) {
+    console.error("Error in updateEmployee:", err);
+    res.status(500).json({
+      message: "An error occurred while updating the employee.",
+      error: err.message,
+    });
+  }
+};
+
+const deleteEmployee = async (req, res) => {
+  try {
+    const { employee_id } = req.query;
+    const employee = await Employee.findOneAndDelete({
+      employee_id: parseInt(employee_id),
+    });
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.json({ message: "Employee deleted successfully" });
+  } catch (err) {
+    console.error("Error in deleteEmployee:", err);
+    res.status(500).json({
+      message: "An error occurred while deleting the employee.",
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   getAllEmployees,
   addEmployee,
   removeEmployee,
   updateEmployeeInfo,
   promoteEmployee,
+  updateEmployee,
+  deleteEmployee,
 };

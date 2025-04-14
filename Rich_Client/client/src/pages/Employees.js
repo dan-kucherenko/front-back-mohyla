@@ -1,5 +1,5 @@
 import $ from "jquery";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 
 // First, let's create a mapping object for the header names to database fields
@@ -29,12 +29,14 @@ function Employees() {
   const [sortField, setSortField] = useState("employee_id");
   const [sortOrder, setSortOrder] = useState("asc");
   const [filters, setFilters] = useState({
-    emp_id: "",
+    employee_id: "",
     position: "",
     department: "",
   });
+  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
   const itemsPerPage = 10;
   const { user } = useAuth();
+  const pollingIntervalRef = useRef(null);
 
   const fetchEmployees = async () => {
     try {
@@ -59,7 +61,7 @@ function Employees() {
         ...activeFilters,
       });
 
-      console.log("Fetching with params:", queryParams.toString()); // Debug log
+      console.log("Fetching with params:", queryParams.toString());
 
       const response = await fetch(
         `http://localhost:4567/company/employees?${queryParams}`,
@@ -76,11 +78,12 @@ function Employees() {
       }
 
       const data = await response.json();
-      console.log("Fetched data:", data); // Debug log
+      console.log("Fetched data:", data);
 
       if (data.employees) {
         setEmployees(data.employees);
         setTotalPages(data.totalPages);
+        setLastUpdateTime(Date.now());
       } else {
         console.error("Invalid data format:", data);
         setEmployees([]);
@@ -93,13 +96,29 @@ function Employees() {
     }
   };
 
+  // Initial fetch and fetch on filter/sort/page change
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       fetchEmployees();
-    }, 300); // Add debounce to prevent too many requests
+    }, 300);
 
     return () => clearTimeout(debounceTimer);
   }, [currentPage, sortField, sortOrder, filters]);
+
+  // Set up polling for updates
+  useEffect(() => {
+    // Poll every 5 seconds for updates
+    pollingIntervalRef.current = setInterval(() => {
+      fetchEmployees();
+    }, 5000);
+
+    // Clean up interval on component unmount
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+    };
+  }, []);
 
   const handleSort = (field) => {
     const dbField = SORT_FIELD_MAPPING[field.toLowerCase()];
@@ -120,7 +139,6 @@ function Employees() {
   };
 
   const handleSearch = () => {
-    // Construct the query object based on search parameters
     let query = {};
 
     if (emp_id) query.employee_id = emp_id;
@@ -130,7 +148,6 @@ function Employees() {
     if (!emp_id && !department && !position) {
       fetchEmployees();
     } else {
-      // Construct the query string from the query object for non-empty search parameters
       const queryString = Object.keys(query)
         .map(
           (key) =>
@@ -148,14 +165,22 @@ function Employees() {
       method: "PATCH",
       contentType: "application/json",
       data: JSON.stringify(updatedData),
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       success: function (response) {
         alert("Employee updated successfully");
         // Refresh the employee list here if necessary, or update the state to reflect the changes
         fetchEmployees();
+        setEditEmployeeId(null); // Exit edit mode
+        setCurrentEdits({}); // Clear current edits
       },
       error: function (xhr, status, error) {
         console.error("Update failed:", status, error);
-        alert("Failed to update employee.");
+        alert(
+          "Failed to update employee: " +
+            (xhr.responseJSON?.message || "Unknown error")
+        );
       },
     });
   };
@@ -164,13 +189,19 @@ function Employees() {
     $.ajax({
       url: "http://localhost:4567/company/employees?employee_id=" + empID,
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       success: function () {
         alert("Employee has been deleted");
         fetchEmployees();
       },
-      error: function () {
-        console.log(empID);
-        alert("There has been an error");
+      error: function (xhr, status, error) {
+        console.error("Delete failed:", status, error);
+        alert(
+          "Failed to delete employee: " +
+            (xhr.responseJSON?.message || "Unknown error")
+        );
       },
     });
   };
@@ -180,8 +211,6 @@ function Employees() {
       // Save logic here
       console.log("Saving...", currentEdits);
       saveChanges(editEmployeeId, currentEdits);
-      setEditEmployeeId(null); // Exit edit mode
-      setCurrentEdits({}); // Clear current edits
     } else {
       setEditEmployeeId(employee.employee_id);
       setCurrentEdits({ ...employee }); // Initialize currentEdits with the employee's data
@@ -193,7 +222,7 @@ function Employees() {
   };
 
   return (
-    <div className="container">
+    <div className="container pl-4">
       {/* Filters */}
       <div className="row mb-3 p-4">
         {" "}
@@ -203,8 +232,8 @@ function Employees() {
             type="text"
             className="form-control"
             placeholder="Employee ID"
-            name="emp_id"
-            value={filters.emp_id}
+            name="employee_id"
+            value={filters.employee_id}
             onChange={handleFilter}
           />
         </div>
@@ -320,9 +349,12 @@ function Employees() {
                       <input
                         type="number"
                         value={currentEdits.age}
-                        onChange={(e) =>
-                          handleEditChange("age", e.target.value)
-                        }
+                        onChange={(event) => {
+                          setCurrentEdits((prev) => ({
+                            ...prev,
+                            age: event.target.value,
+                          }));
+                        }}
                       />
                     ) : (
                       employee.age

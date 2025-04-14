@@ -30,13 +30,15 @@ mongoose
 
 // Middlewares
 app.use(cors());
-app.use(express.static(__dirname)); // Consider specifying a folder for static content explicitly
+app.use(express.static(__dirname));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
 const authRoutes = require("./routes/auth");
 const employeesRoutes = require("./routes/employees");
+const analyticsRoutes = require("./routes/analytics");
 
 app.use("/auth", authRoutes);
 app.use("/company", employeesRoutes);
+app.use("/analytics", analyticsRoutes);

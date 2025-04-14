@@ -154,9 +154,68 @@ const verifyToken = async (req, res) => {
   }
 };
 
+const createAdmin = async (req, res) => {
+  try {
+    // Check if the requester is an admin
+    if (req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Only admins can create other admins" });
+    }
+
+    // Validate input
+    const { error } = registerSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+    // Check if user exists
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    // Create verification token
+    const verificationToken = jwt.sign(
+      { email: req.body.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    // Create user with admin role
+    const user = new User({
+      ...req.body,
+      password: hashedPassword,
+      verificationToken,
+      role: "admin",
+      isVerified: true, // Auto-verify admin accounts
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      message: "Admin user created successfully",
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Admin creation error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   verifyEmail,
   verifyToken,
+  createAdmin,
 };
